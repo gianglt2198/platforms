@@ -1,4 +1,4 @@
-package logger
+package oblogger
 
 import (
 	"go.uber.org/zap"
@@ -53,6 +53,8 @@ func NewLogger(app, env string, maskFields map[string]string) (*Logger, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	l.Core().Sync()
 
 	l = l.Named(app)
 	zap.ReplaceGlobals(l)

@@ -2,7 +2,7 @@ package core
 
 import (
 	"context"
-	"go-platform/internal/tools/logger"
+	oblogger "go-platform/internal/observability/logger"
 	"os"
 	"os/signal"
 	"sync"
@@ -15,11 +15,11 @@ type Platform struct {
 	// Name of the platform
 	services    []Service
 	middlewares []Middleware
-	logger      *logger.Logger
+	logger      *oblogger.Logger
 	wg          sync.WaitGroup
 }
 
-func New(logger *logger.Logger, services ...Service) *Platform {
+func New(logger *oblogger.Logger, services ...Service) *Platform {
 	return &Platform{
 		services: services,
 		logger:   logger,
@@ -60,7 +60,7 @@ func (p *Platform) Run() error {
 
 	// Wait for shutdown signal
 	<-sigChan
-	return p.Shutdown()
+	return nil
 }
 
 func (p *Platform) Shutdown() error {
