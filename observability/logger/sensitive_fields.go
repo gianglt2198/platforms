@@ -2,7 +2,7 @@ package oblogger
 
 import (
 	"encoding/json"
-	"go-platform/internal/tools/utils"
+	"my-platform/pkg/tools/utils"
 	"reflect"
 	"regexp"
 

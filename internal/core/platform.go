@@ -2,7 +2,7 @@ package core
 
 import (
 	"context"
-	oblogger "go-platform/internal/observability/logger"
+	oblogger "my-platform/observability/logger"
 	"os"
 	"os/signal"
 	"sync"
@@ -15,11 +15,11 @@ type Platform struct {
 	// Name of the platform
 	services    []Service
 	middlewares []Middleware
-	logger      *oblogger.Logger
+	logger      oblogger.ObLogger
 	wg          sync.WaitGroup
 }
 
-func New(logger *oblogger.Logger, services ...Service) *Platform {
+func New(logger oblogger.ObLogger, services ...Service) *Platform {
 	return &Platform{
 		services: services,
 		logger:   logger,
@@ -53,7 +53,7 @@ func (p *Platform) Run() error {
 		go func(s Service) {
 			defer p.wg.Done()
 			if err := s.Start(); err != nil {
-				p.logger.S.Errorf("Service %s failed: %v", s.Name(), err)
+				p.logger.GetSugaredLogger().Errorf("Service %s failed: %v", s.Name(), err)
 			}
 		}(svc)
 	}
@@ -64,7 +64,7 @@ func (p *Platform) Run() error {
 }
 
 func (p *Platform) Shutdown() error {
-	p.logger.S.Info("Initiating graceful shutdown...")
+	p.logger.GetSugaredLogger().Info("Initiating graceful shutdown...")
 
 	// Create a timeout context
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
@@ -73,7 +73,7 @@ func (p *Platform) Shutdown() error {
 	// Stop all services
 	for _, svc := range p.services {
 		if err := svc.Stop(ctx); err != nil {
-			p.logger.S.Errorf("Error stopping service %s: %v", svc.Name(), err)
+			p.logger.GetSugaredLogger().Errorf("Error stopping service %s: %v", svc.Name(), err)
 		}
 	}
 
@@ -88,7 +88,7 @@ func (p *Platform) Shutdown() error {
 	case <-ctx.Done():
 		return ctx.Err()
 	case <-done:
-		p.logger.S.Info("Graceful shutdown completed")
+		p.logger.GetLogger().Info("Graceful shutdown completed")
 		return nil
 	}
 }
