@@ -5,7 +5,7 @@ import (
 	"reflect"
 	"regexp"
 
-	"github.com/gianglt2198/platforms/pkg/tools/utils"
+	"github.com/gianglt2198/platforms/pkg/utils"
 
 	"go.uber.org/zap/buffer"
 	"go.uber.org/zap/zapcore"

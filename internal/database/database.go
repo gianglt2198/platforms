@@ -6,30 +6,33 @@ import (
 	"sync"
 	"time"
 
-	"github.com/gianglt2198/platforms/internal/config"
-
+	"github.com/gianglt2198/platforms/pkg/utils"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 	"gorm.io/plugin/dbresolver"
 )
 
+type DBConfig struct {
+	IsProdEnv           bool
+	Connection          string `json:"connection"`
+	ReplicasConnections string `json:"replicas_connections"`
+}
+
 var (
 	db     *gorm.DB
 	dbOnce sync.Once
 )
 
-func ProvideDb(cfg *config.Config) *gorm.DB {
+func ProvideDb(cfg *DBConfig) *gorm.DB {
 	dbOnce.Do(func() {
 		logLevel := logger.Silent
 		if !cfg.IsProdEnv {
 			logLevel = logger.Info
 		}
 
-		var err error
-
-		for i := 0; i < 5; i++ {
-			db, err = gorm.Open(postgres.Open(cfg.GetDSN()), &gorm.Config{
+		db, err := utils.BackoffRetryMechanism(5, func() (*gorm.DB, error) {
+			return gorm.Open(postgres.Open(cfg.Connection), &gorm.Config{
 				Logger: logger.New(log.New(os.Stdout, "\r\n", log.LstdFlags), logger.Config{
 					SlowThreshold:             time.Second,
 					LogLevel:                  logLevel,
@@ -38,21 +41,16 @@ func ProvideDb(cfg *config.Config) *gorm.DB {
 					Colorful:                  !cfg.IsProdEnv,
 				}),
 			})
-
-			if err == nil {
-				break
-			}
-			time.Sleep(time.Second * 5) // retry after 5 seconds
-		}
+		})
 
 		if err != nil {
 			panic(err)
 		}
 
-		if cfg.IsProdEnv && cfg.Database.ReplicasConnections != "" {
+		if cfg.IsProdEnv && cfg.ReplicasConnections != "" {
 			_ = db.Use(dbresolver.Register(dbresolver.Config{
 				Sources:           []gorm.Dialector{db.Dialector},
-				Replicas:          []gorm.Dialector{postgres.Open(cfg.Database.ReplicasConnections)},
+				Replicas:          []gorm.Dialector{postgres.Open(cfg.ReplicasConnections)},
 				Policy:            dbresolver.RoundRobinPolicy(),
 				TraceResolverMode: true,
 			}))
