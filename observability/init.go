@@ -4,8 +4,9 @@ import (
 	"context"
 	"errors"
 	"log"
-	obmetrics "my-platform/observability/metrics"
-	obtracing "my-platform/observability/tracing"
+
+	obmetrics "github.com/gianglt2198/platforms/observability/metrics"
+	obtracing "github.com/gianglt2198/platforms/observability/tracing"
 
 	"go.opentelemetry.io/otel"
 	metric2 "go.opentelemetry.io/otel/metric"

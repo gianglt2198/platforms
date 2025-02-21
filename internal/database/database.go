@@ -2,10 +2,11 @@ package mydatabase
 
 import (
 	"log"
-	"my-platform/internal/config"
 	"os"
 	"sync"
 	"time"
+
+	"github.com/gianglt2198/platforms/internal/config"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"

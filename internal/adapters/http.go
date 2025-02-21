@@ -2,9 +2,10 @@ package adapters
 
 import (
 	"context"
-	"my-platform/internal/core"
 	"net/http"
 	"net/http/httptest"
+
+	"github.com/gianglt2198/platforms/internal/core"
 )
 
 type HTTPRequest struct {

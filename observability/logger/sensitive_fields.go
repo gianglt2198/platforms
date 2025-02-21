@@ -2,9 +2,10 @@ package oblogger
 
 import (
 	"encoding/json"
-	"my-platform/pkg/tools/utils"
 	"reflect"
 	"regexp"
+
+	"github.com/gianglt2198/platforms/pkg/tools/utils"
 
 	"go.uber.org/zap/buffer"
 	"go.uber.org/zap/zapcore"

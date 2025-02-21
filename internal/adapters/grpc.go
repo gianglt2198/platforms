@@ -2,7 +2,8 @@ package adapters
 
 import (
 	"context"
-	"my-platform/internal/core"
+
+	"github.com/gianglt2198/platforms/internal/core"
 
 	"google.golang.org/grpc"
 )

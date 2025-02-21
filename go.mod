@@ -1,4 +1,4 @@
-module my-platform
+module github.com/gianglt2198/platforms
 
 go 1.23.3
 

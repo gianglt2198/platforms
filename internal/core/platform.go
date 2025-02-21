@@ -2,12 +2,13 @@ package core
 
 import (
 	"context"
-	oblogger "my-platform/observability/logger"
 	"os"
 	"os/signal"
 	"sync"
 	"syscall"
 	"time"
+
+	oblogger "github.com/gianglt2198/platforms/observability/logger"
 )
 
 type PlatformOption func(*Platform)
