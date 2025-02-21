@@ -4,7 +4,7 @@ import (
 	"context"
 	"log/slog"
 
-	myerrors "github.com/gianglt2198/platforms/internal/errors"
+	myerrors "github.com/gianglt2198/platforms/errors"
 	"gorm.io/gorm"
 )
 

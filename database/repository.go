@@ -12,7 +12,7 @@ import (
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 
-	myerrors "github.com/gianglt2198/platforms/internal/errors"
+	myerrors "github.com/gianglt2198/platforms/errors"
 )
 
 const (
